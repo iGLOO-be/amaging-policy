@@ -1,0 +1,31 @@
+{
+  "name": "amaging-policy",
+  "version": "0.0.0",
+  "main": "lib/policy.js",
+  "publishConfig": {
+    "registry": "http://npmregistry.igloo.be:19720"
+  },
+  "scripts": {
+    "prepublish": "grunt clean && grunt src"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-fs": "0.0.3",
+    "grunt": "^0.4.4",
+    "grunt-coffeelint": "0.0.10",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-env": "^0.4.1",
+    "grunt-istanbul": "^0.2.5",
+    "grunt-istanbul-coverage": "0.0.5",
+    "grunt-mocha-test": "^0.10.2",
+    "grunt-open": "^0.2.3",
+    "grunt-release": "^0.7.0",
+    "load-grunt-tasks": "^0.4.0"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1"
+  }
+}
