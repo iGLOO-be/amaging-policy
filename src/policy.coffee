@@ -1,7 +1,7 @@
 
 assert = require 'assert'
 _ = require 'lodash'
-Store = require './store'
+Store = require 'dottystore'
 validators = require './validators'
 
 ###
