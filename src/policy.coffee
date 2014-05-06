@@ -1,37 +1,84 @@
 
 assert = require 'assert'
-utils = require './fixtures/utils'
+_ = require 'lodash'
+Store = require './store'
+validators = require './validators'
 
-class Policy
-  constructor: (policy, token, secret) ->
-    assert(policy, 'The policy is mandatory.')
-    assert(token, 'The token is mandatory.')
-    assert(secret, 'The secret is mandatory.')
+###
+  Policy sample:
 
-    @_policyStr = policy
-    @_tokenHex = token
-    @_secret = secret
+  { "expiration": "2007-12-01T12:00:00.000Z",
+    "conditions": [
+      ["starts-with", "$key", "user/eric/"],
+      ["range-length", "$key", 10, 50],
+      {"success_action_redirect": "http://johnsmith.s3.amazonaws.com/new_post.html"},
+    ]
+  }
 
-  isValid: ->
-    newToken = utils.genToken(@_policyStr, @_secret)
+###
 
-    unless newToken == @_tokenHex
-      return false
+class PolicyError extends Error
+  constructor: (@message) ->
+    @name = 'PolicyError'
+    super
 
-    @_policy = utils.decodeBase64(@_policyStr)
+class Condition
+  constructor: (@key, @validator, @validatorArgs) ->
+  valid: (value) -> @validator.apply(null, [value].concat(_.toArray(@validatorArgs)))
 
-    unless @_policy = utils.parseJSON(@_policy)
-      return false
+class Policy extends Store
+  @validators: {}
+  @registerValidators: (validators) ->
+    for validatorName of validators
+      Policy.registerValidator validatorName, validators[validatorName]
+  @registerValidator: (validatorName, validator) ->
+    Policy.validators[validatorName] = validator
+  @getValidator: (validatorName) ->
+    Policy.validators[validatorName]
 
-    # check validity
+  constructor: (policy) ->
+    super
+
+    @_parsePolicy(policy)
+
+  set: (key, value) ->
+    conditions = @_findCondition(key)
+
+    for cond in conditions or []
+      unless cond.valid(value)
+        throw new PolicyError('Invalid value for key: ' + key)
+
+    super
+
+  _parsePolicy: (policy) ->
+    data = {}
+    conditions = []
+
+    for pol in policy.conditions or []
+      if _.isArray(pol)
+        validatorName = pol[0]
+        key = pol[1].replace /^$/, ''
+        validatorArgs = pol[2...]
+
+        validator = Policy.getValidator(validatorName)
+        unless validator
+          throw new PolicyError('invalid policy validator name: ' + validatorName)
+
+        condition = new Condition(key, validator, validatorArgs)
+        conditions.push condition
+      else if _.isObject(pol)
+        _.extend data, pol
+
+    @conditions = conditions
+
+    for key of data
+      @set key, data[key]
+
+  _findCondition: (key) ->
+    _.filter(@conditions, key: key)
 
 
 
-  get: (key, value) ->
-
-
-
-  set: (key) ->
-
+Policy.registerValidators validators
 
 module.exports = Policy
