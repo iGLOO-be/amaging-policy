@@ -1,7 +1,7 @@
 {
-  "name": "amaging-policy",
+  "name": "igloo-amaging-policy",
   "version": "0.0.0",
-  "main": "lib/policy.js",
+  "main": "lib/policy-factory.js",
   "publishConfig": {
     "registry": "http://npmregistry.igloo.be:19720"
   },
@@ -26,6 +26,10 @@
     "load-grunt-tasks": "^0.4.0"
   },
   "dependencies": {
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "moment": "^2.6.0",
+    "dotty": "0.0.2",
+    "emissary": "^1.2.1",
+    "debug": "^0.8.1"
   }
 }

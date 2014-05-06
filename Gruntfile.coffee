@@ -47,7 +47,7 @@ module.exports = (grunt) ->
           reporter: 'spec'
           timeout: 4000
           grep: process.env.GREP
-        src: ['test_lib/policy_test.js']
+        src: ['test_lib/*_test.js']
 
     env:
       coverage:
