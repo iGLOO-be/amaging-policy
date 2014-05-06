@@ -1,19 +1,31 @@
 
+assert = require 'assert'
+utils = require './fixtures/utils'
+
 class Policy
-  contructor: (policy, token) ->
-    @policy = policy
-    @token = token
-    @_isValid()
+  constructor: (policy, token, secret) ->
+    assert(policy, 'The policy is mandatory.')
+    assert(token, 'The token is mandatory.')
+    assert(secret, 'The secret is mandatory.')
 
-  _isValid: ->
-    console.log 'Policy: ', @policy
-    console.log 'Token: ', @token
+    @_policyStr = policy
+    @_tokenHex = token
+    @_secret = secret
 
-    newPolicy = new Buffer('toto', 'base64')
-    unless newPolicy == @token
+  isValid: ->
+    newToken = utils.genToken(@_policyStr, @_secret)
+
+    unless newToken == @_tokenHex
       return false
-    else
-      return true
+
+    @_policy = utils.decodeBase64(@_policyStr)
+
+    unless @_policy = utils.parseJSON(@_policy)
+      return false
+
+    # check validity
+
+
 
   get: (key, value) ->
 
