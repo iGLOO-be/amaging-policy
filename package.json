@@ -1,6 +1,6 @@
 {
   "name": "igloo-amaging-policy",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "lib/policy-factory.js",
   "publishConfig": {
     "registry": "http://npmregistry.igloo.be:19720"
