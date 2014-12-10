@@ -83,3 +83,13 @@ describe 'PolicyFactory', ->
           token
         )
       expect(policy).to.be.instanceOf(requireTest('lib/policy'))
+
+
+  describe 'PolicyFactory::represent', ->
+    it 'Return a PolicyRepresentation', ->
+      policy =
+        getPolicyFactory('secret').represent(
+          new Date(),
+          '1d'
+        )
+      expect(policy).to.be.instanceOf(requireTest('lib/policy-representation'))

@@ -5,6 +5,8 @@ utils = require './utils'
 Policy = require './policy'
 debug = require('debug')('amaging:policyFactory')
 
+PolicyRepresentation = require './policy-representation'
+
 # Register default validators
 # require './validators'
 
@@ -12,6 +14,9 @@ class PolicyFactory
   constructor: (@_secret) ->
     debug('Instiate PolicyFactory with secret:', @_secret)
     assert(@_secret, 'The secret is mandatory.')
+
+  represent: (date, offset) ->
+    new PolicyRepresentation(date, offset, @_secret)
 
   create: (policy, token) ->
     assert(policy, 'The policy is mandatory.')
