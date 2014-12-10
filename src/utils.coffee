@@ -61,7 +61,7 @@ utils =
         number = single[2]
         ext = exts[single[3]]
 
-        date[operator](ext, number)
+        date[operator](number, ext)
 
       return date.toDate()
 

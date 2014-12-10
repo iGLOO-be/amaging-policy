@@ -73,7 +73,7 @@ describe 'PolicyFactory', ->
       expect(policy).to.be.equals(false)
 
     it 'Return a policy', ->
-      policyData = JSON.stringify({"expiration": moment().add('d', 15)})
+      policyData = JSON.stringify({"expiration": moment().add(15, 'd')})
       base64Policy = encodeBase64(policyData)
       hmacSecret = 'secret'
       token = genToken(base64Policy, hmacSecret)
