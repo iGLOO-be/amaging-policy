@@ -3,7 +3,7 @@ assert = require 'assert'
 moment = require 'moment'
 utils = require './utils'
 Policy = require './policy'
-debug = require('debug')('PolicyFactory')
+debug = require('debug')('amaging:policyFactory')
 
 # Register default validators
 # require './validators'
