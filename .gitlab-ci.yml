@@ -1,0 +1,7 @@
+image: loicmahieu/alpine-node-test-runner
+
+test:
+  script:
+    - npm install -g grunt-cli
+    - npm install
+    - npm test
