@@ -84,6 +84,9 @@ module.exports = (grunt) ->
 
         dir: "coverage"
 
+    release:
+      options: {}
+
   grunt.registerTask('src', ['coffeelint:src', 'clean:src', 'coffee:src'])
   grunt.registerTask('compile:test', ['coffeelint:test', 'clean:test', 'coffee:test'])
   grunt.registerTask('test', ['src', 'compile:test', 'mochaTest'])
