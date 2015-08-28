@@ -2,10 +2,8 @@
   "name": "igloo-amaging-policy",
   "version": "0.1.0",
   "main": "lib/policy-factory.js",
-  "publishConfig": {
-    "registry": "http://npmregistry.igloo.be:19720"
-  },
   "scripts": {
+    "test": "grunt test",
     "prepublish": "grunt clean && grunt src"
   },
   "devDependencies": {
