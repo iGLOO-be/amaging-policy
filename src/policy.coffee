@@ -18,8 +18,13 @@ validators = require './validators'
 ###
 
 class PolicyError extends Error
-  constructor: (@message) ->
+  constructor: (@type, @data) ->
     @name = 'PolicyError'
+    @message = switch @type
+      when 'INVALID_KEY'
+        "Invalid value for key: #{@data.key}"
+      when 'INVALID_VALIDATOR_NAME'
+        "Invalid policy validator name: #{@data.validator}"
     super
 
 class Condition
@@ -46,7 +51,7 @@ class Policy extends Store
 
     for cond in conditions or []
       unless cond.valid(value)
-        throw new PolicyError('Invalid value for key: ' + key)
+        throw new PolicyError('INVALID_KEY', key: key)
 
     super
 
@@ -62,7 +67,7 @@ class Policy extends Store
 
         validator = Policy.getValidator(validatorName)
         unless validator
-          throw new PolicyError('invalid policy validator name: ' + validatorName)
+          throw new PolicyError('INVALID_VALIDATOR_NAME', validator: validator)
 
         condition = new Condition(key, validator, validatorArgs)
         conditions.push condition
