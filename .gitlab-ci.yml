@@ -1,6 +1,0 @@
-image: mhart/alpine-node:8
-
-test:
-  script:
-    - npm install
-    - npm test
