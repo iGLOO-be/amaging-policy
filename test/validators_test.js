@@ -9,7 +9,7 @@ const { expect } = chai
 chai.should()
 
 describe('Validators', function () {
-  const validators = require('../src/validators')
+  const validators = require('../lib/validators')
 
   describe('eq', () =>
     it('Must test equality', function () {

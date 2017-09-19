@@ -11,7 +11,7 @@ chai.should()
 
 const moment = require('moment')
 
-const requireTest = mod => require(path.join((process.env.APP_SRV_COVERAGE || '../src'), mod))
+const requireTest = mod => require(path.join((process.env.APP_SRV_COVERAGE || '../lib'), mod))
 
 describe('Utils', function () {
   const utils = requireTest('./utils')

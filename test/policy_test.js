@@ -7,7 +7,7 @@
 const chai = require('chai')
 const { expect } = chai
 
-const requirePolicy = () => require('../src/policy')
+const requirePolicy = () => require('../lib/policy')
 const getPolicy = args => new (requirePolicy())(args)
 
 describe('Policy', function () {

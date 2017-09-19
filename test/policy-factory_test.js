@@ -17,7 +17,7 @@ const genToken = function (policy, secret) {
 
 const encodeBase64 = policy => Buffer.from(policy, 'utf-8').toString('base64')
 
-const requirePolicyFactory = () => require('../src/policy-factory')
+const requirePolicyFactory = () => require('../lib/policy-factory')
 const getPolicyFactory = (policy, token, secret) => new (requirePolicyFactory())(policy, token, secret)
 
 describe('PolicyFactory', function () {
@@ -79,7 +79,7 @@ describe('PolicyFactory', function () {
           base64Policy,
           token
         )
-      return expect(policy).to.be.instanceOf(require('../src/policy'))
+      return expect(policy).to.be.instanceOf(require('../lib/policy'))
     })
   })
 
@@ -90,7 +90,7 @@ describe('PolicyFactory', function () {
           new Date(),
           '1d'
         )
-      return expect(policy).to.be.instanceOf(require('../src/policy-representation'))
+      return expect(policy).to.be.instanceOf(require('../lib/policy-representation'))
     })
   )
 })
