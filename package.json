@@ -1,5 +1,5 @@
 {
-  "name": "@igloo/igloo-amaging-policy",
+  "name": "@igloo-be/igloo-amaging-policy",
   "version": "0.1.1",
   "main": "lib/policy-factory.js",
   "scripts": {
