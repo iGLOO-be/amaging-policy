@@ -3,11 +3,13 @@
   "version": "0.1.1",
   "main": "lib/policy-factory.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "npm run lint && nyc mocha",
+    "lint": "standard --env mocha"
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "nyc": "~11.0.2"
+    "nyc": "~11.0.2",
+    "standard": "~10.0.2"
   },
   "dependencies": {
     "debug": "^2.2.0",

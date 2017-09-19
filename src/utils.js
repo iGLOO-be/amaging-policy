@@ -4,13 +4,13 @@ const crypto = require('crypto')
 const _ = require('lodash')
 
 const utils = {
-  genToken(str, secret) {
+  genToken (str, secret) {
     const sign = crypto.createHmac('sha1', secret)
     sign.update(str)
     return sign.digest('hex').toLowerCase()
   },
 
-  parseJSON(str) {
+  parseJSON (str) {
     try {
       return JSON.parse(str)
     } catch (e) {
@@ -18,11 +18,11 @@ const utils = {
     }
   },
 
-  decodeBase64(str) {
-    return new Buffer(str, 'base64').toString()
+  decodeBase64 (str) {
+    return Buffer.from(str, 'base64').toString()
   },
 
-  offsetDate: (function() {
+  offsetDate: (function () {
     const exts = {
       'm': 'minutes',
       'h': 'hours',
@@ -39,12 +39,12 @@ const utils = {
 
     const join = obj => _.keys(obj).map(v => quoteRegex(v)).join('|')
 
-    var quoteRegex = str => (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
+    var quoteRegex = str => (str + '').replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')
 
     const regex = new RegExp(`(${join(ops)})?(\\d+)(${join(exts)})`)
     const regexGlobal = new RegExp(regex.source, 'g')
 
-    return function(date, diff) {
+    return function (date, diff) {
       if (_.isString(date)) {
         diff = date
         date = new Date()

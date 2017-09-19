@@ -2,7 +2,7 @@
 const assert = require('assert')
 const utils = require('./utils')
 
-const genPolicyObject = function(date, cond, data) {
+const genPolicyObject = function (date, cond, data) {
   if (cond == null) { cond = [] }
   if (data == null) { data = {} }
   const policy = {
@@ -18,7 +18,7 @@ const genPolicyObject = function(date, cond, data) {
 }
 
 class PolicyRepresentation {
-  constructor(date, diffDate, secret) {
+  constructor (date, diffDate, secret) {
     assert(date, 'Options `date` is mandatory.')
     assert(secret, 'Options `secret` is mandatory.')
 
@@ -28,29 +28,29 @@ class PolicyRepresentation {
     this._secret = secret
   }
 
-  cond(action, key, value) {
+  cond (action, key, value) {
     this._conditions.push([ action, key, value ])
     return this
   }
 
-  data(key, value) {
+  data (key, value) {
     this._data[key] = value
     return this
   }
 
-  toJSON() {
+  toJSON () {
     return genPolicyObject(this._expiration, this._conditions, this._data)
   }
 
-  toString() {
+  toString () {
     return JSON.stringify(this.toJSON())
   }
 
-  toBase64() {
-    return Buffer(this.toString(), "utf-8").toString("base64")
+  toBase64 () {
+    return Buffer.from(this.toString(), 'utf-8').toString('base64')
   }
 
-  token() {
+  token () {
     return utils.genToken(this.toBase64(), this._secret)
   }
 }

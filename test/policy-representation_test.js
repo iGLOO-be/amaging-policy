@@ -4,91 +4,86 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
-const crypto = require('crypto');
-const chai = require('chai');
-const moment = require('moment');
-const { assert } = chai;
-const { expect } = chai;
+const chai = require('chai')
+const { expect } = chai
 
-const requirePolicyRepresentation = () => require('../src/policy-representation');
-const Policy = requirePolicyRepresentation();
+const requirePolicyRepresentation = () => require('../src/policy-representation')
+const Policy = requirePolicyRepresentation()
 
-describe('PolicyRepresentation', function() {
-  it('is a class', () => expect(requirePolicyRepresentation()).to.be.a('function'));
+describe('PolicyRepresentation', function () {
+  it('is a class', () => expect(requirePolicyRepresentation()).to.be.a('function'))
 
   it('Cannot be instanciated without a date', () =>
     expect(() => new Policy()).throws('Options `date` is mandatory.')
-  );
+  )
 
   it('Cannot be instanciated without a secret', () =>
     expect(() => new Policy(new Date(), '1d')).throws('Options `secret` is mandatory.')
-  );
+  )
 
-  it('Can be instanciated with all arguments', () => new Policy(new Date(), '1d', 'secret'));
-
+  it('Can be instanciated with all arguments', () => new Policy(new Date(), '1d', 'secret'))
 
   describe('PolicyRepresentation::conds', () =>
-    it('Add a condition', function() {
-      const policy = new Policy(new Date(), '1d', 'secret');
-      policy.cond('eq', '$key', 'test');
+    it('Add a condition', function () {
+      const policy = new Policy(new Date(), '1d', 'secret')
+      policy.cond('eq', '$key', 'test')
 
-      expect(policy._conditions).to.be.an('array');
-      return expect(policy._conditions.length).to.be.equals(1);
+      expect(policy._conditions).to.be.an('array')
+      return expect(policy._conditions.length).to.be.equals(1)
     })
-  );
+  )
 
   describe('PolicyRepresentation::data', () =>
-    it('Add a data', function() {
-      const policy = new Policy(new Date(), '1d', 'secret');
-      policy.data('foo', 'bar');
+    it('Add a data', function () {
+      const policy = new Policy(new Date(), '1d', 'secret')
+      policy.data('foo', 'bar')
 
-      expect(policy._data).to.be.an('object');
-      return expect(policy._data.foo).to.be.equals('bar');
+      expect(policy._data).to.be.an('object')
+      return expect(policy._data.foo).to.be.equals('bar')
     })
-  );
+  )
 
-  describe('PolicyRepresentation', function() {
-    it('toJSON', function() {
-      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret');
-      policy.data('foo', 'bar');
-      policy.cond('eq', '$key', 'test');
+  describe('PolicyRepresentation', function () {
+    it('toJSON', function () {
+      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
+      policy.data('foo', 'bar')
+      policy.cond('eq', '$key', 'test')
 
-      const json = policy.toJSON();
+      const json = policy.toJSON()
 
-      expect(json).to.be.an('object');
+      expect(json).to.be.an('object')
       return expect(json).to.deep.equal({
         expiration: new Date('2014-12-12T16:30:37.725Z'),
         conditions: [
           [ 'eq', '$key', 'test' ],
           {foo: 'bar'}
         ]
-      });
-    });
+      })
+    })
 
-    it('toString', function() {
-      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret');
-      policy.data('foo', 'bar');
-      policy.cond('eq', '$key', 'test');
+    it('toString', function () {
+      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
+      policy.data('foo', 'bar')
+      policy.cond('eq', '$key', 'test')
 
-      const str = policy.toString();
+      const str = policy.toString()
 
       return expect(str).to.equal(
         '{"expiration":"2014-12-12T16:30:37.725Z","conditions":[["eq","$key","test"],{"foo":"bar"}]}'
-      );
-    });
+      )
+    })
 
-    return it('toBase64', function() {
-      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret');
-      policy.data('foo', 'bar');
-      policy.cond('eq', '$key', 'test');
+    return it('toBase64', function () {
+      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
+      policy.data('foo', 'bar')
+      policy.cond('eq', '$key', 'test')
 
-      const str = policy.toBase64();
+      const str = policy.toBase64()
 
       return expect(str).to.equal(
         'eyJleHBpcmF0aW9uIjoiMjAxNC0xMi0xMlQxNjozMDozNy43MjVaIiwiY29uZ' +
         'Gl0aW9ucyI6W1siZXEiLCIka2V5IiwidGVzdCJdLHsiZm9vIjoiYmFyIn1dfQ=='
-      );
-    });
-  });
-});
-
+      )
+    })
+  })
+})

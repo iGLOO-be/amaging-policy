@@ -1,5 +1,4 @@
 
-const assert = require('assert')
 const _ = require('lodash')
 const Store = require('dottystore')
 const validators = require('./validators')
@@ -18,7 +17,7 @@ const validators = require('./validators')
 */
 
 class PolicyError extends Error {
-  constructor(type, data) {
+  constructor (type, data) {
     super(...arguments)
 
     this.type = type
@@ -36,19 +35,19 @@ class PolicyError extends Error {
 }
 
 class Condition {
-  constructor(key, validator, validatorArgs) {
+  constructor (key, validator, validatorArgs) {
     this.key = key
     this.validator = validator
     this.validatorArgs = validatorArgs
   }
-  valid(value) { return this.validator.apply(null, [value].concat(_.toArray(this.validatorArgs))) }
+  valid (value) { return this.validator.apply(null, [value].concat(_.toArray(this.validatorArgs))) }
 }
 
 class Policy extends Store {
-  static initClass() {
+  static initClass () {
     this.validators = {}
   }
-  static registerValidators(validators) {
+  static registerValidators (validators) {
     return (() => {
       const result = []
       for (let validatorName in validators) {
@@ -57,20 +56,20 @@ class Policy extends Store {
       return result
     })()
   }
-  static registerValidator(validatorName, validator) {
-    return Policy.validators[validatorName] = validator
+  static registerValidator (validatorName, validator) {
+    Policy.validators[validatorName] = validator
   }
-  static getValidator(validatorName) {
+  static getValidator (validatorName) {
     return Policy.validators[validatorName]
   }
 
-  constructor(policy) {
+  constructor (policy) {
     super(...arguments)
 
     this._parsePolicy(policy)
   }
 
-  set(key, value) {
+  set (key, value) {
     const conditions = this._findCondition(key)
 
     for (let cond of Array.from(conditions || [])) {
@@ -82,7 +81,7 @@ class Policy extends Store {
     return super.set(...arguments)
   }
 
-  _parsePolicy(policy) {
+  _parsePolicy (policy) {
     let key
     const data = {}
     const conditions = []
@@ -116,7 +115,7 @@ class Policy extends Store {
     })()
   }
 
-  _findCondition(key) {
+  _findCondition (key) {
     return _.filter(this.conditions, {key})
   }
 }

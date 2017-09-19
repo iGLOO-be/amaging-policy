@@ -11,17 +11,17 @@ const PolicyRepresentation = require('./policy-representation')
 // require './validators'
 
 class PolicyFactory {
-  constructor(_secret) {
+  constructor (_secret) {
     this._secret = _secret
     debug('Instiate PolicyFactory with secret:', this._secret)
     assert(this._secret, 'The secret is mandatory.')
   }
 
-  represent(date, offset) {
+  represent (date, offset) {
     return new PolicyRepresentation(date, offset, this._secret)
   }
 
-  create(policy, token) {
+  create (policy, token) {
     assert(policy, 'The policy is mandatory.')
     assert(token, 'The token is mandatory.')
 

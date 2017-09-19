@@ -4,18 +4,17 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
-const path = require('path');
-const chai = require('chai');
-const { assert } = chai;
-const { expect } = chai;
-chai.should();
+const path = require('path')
+const chai = require('chai')
+const { expect } = chai
+chai.should()
 
-const moment = require('moment');
+const moment = require('moment')
 
 const requireTest = mod => require(path.join((process.env.APP_SRV_COVERAGE || '../src'), mod))
 
-describe('Utils', function() {
-  const utils = requireTest('./utils');
+describe('Utils', function () {
+  const utils = requireTest('./utils')
 
   describe('utils.offsetDate', () =>
     it('Can perform simple add', () =>
@@ -23,5 +22,5 @@ describe('Utils', function() {
         moment().add(10, 'day').toDate().toString()
       )
     )
-  );
-});
+  )
+})
