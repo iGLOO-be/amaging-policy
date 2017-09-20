@@ -1,6 +1,6 @@
 {
   "name": "@igloo-be/amaging-policy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/policy-factory.js",
   "scripts": {
     "test": "npm run lint && nyc mocha",
