@@ -8,6 +8,7 @@ const crypto = require('crypto')
 const chai = require('chai')
 const moment = require('moment')
 const { expect } = chai
+const jwt = require('jsonwebtoken')
 
 const genToken = function (policy, secret) {
   const sign = crypto.createHmac('sha1', secret)
@@ -28,6 +29,33 @@ describe('PolicyFactory', function () {
   )
 
   it('Can be instanciated with all arguments', () => getPolicyFactory('secret'))
+
+  describe('PolicyFactory::createFromJWT', function () {
+    it('Return false if policy is not correct', async function () {
+      const policyToken = jwt.sign({}, 'foobar')
+      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      return expect(policy).to.be.equals(false)
+    })
+
+    it('Return false if policy expired', async function () {
+      const policyToken = jwt.sign({}, 'foobar', { expiresIn: -1 })
+      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      return expect(policy).to.be.equals(false)
+    })
+
+    it('Return a policy', async function () {
+      const policyToken = jwt.sign({
+        data: {
+          conditions: [
+            { foo: 'barrr' }
+          ]
+        }
+      }, 'secret')
+      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      expect(policy).to.be.instanceOf(require('../lib/policy'))
+      expect(policy.get('foo')).to.be.equal('barrr')
+    })
+  })
 
   describe('PolicyFactory::create', function () {
     it('Return false if token do not match policy', function () {
