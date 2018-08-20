@@ -4,6 +4,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
+const jwt = require('jsonwebtoken')
 const chai = require('chai')
 const { expect } = chai
 
@@ -52,7 +53,7 @@ describe('PolicyRepresentation', function () {
       const json = policy.toJSON()
 
       expect(json).to.be.an('object')
-      return expect(json).to.deep.equal({
+      expect(json).to.deep.equal({
         expiration: new Date('2014-12-12T16:30:37.725Z'),
         conditions: [
           [ 'eq', '$key', 'test' ],
@@ -68,22 +69,42 @@ describe('PolicyRepresentation', function () {
 
       const str = policy.toString()
 
-      return expect(str).to.equal(
+      expect(str).to.equal(
         '{"expiration":"2014-12-12T16:30:37.725Z","conditions":[["eq","$key","test"],{"foo":"bar"}]}'
       )
     })
 
-    return it('toBase64', function () {
+    it('toBase64', function () {
       const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
       policy.data('foo', 'bar')
       policy.cond('eq', '$key', 'test')
 
       const str = policy.toBase64()
 
-      return expect(str).to.equal(
+      expect(str).to.equal(
         'eyJleHBpcmF0aW9uIjoiMjAxNC0xMi0xMlQxNjozMDozNy43MjVaIiwiY29uZ' +
         'Gl0aW9ucyI6W1siZXEiLCIka2V5IiwidGVzdCJdLHsiZm9vIjoiYmFyIn1dfQ=='
       )
+    })
+
+    it('toJWT', async function () {
+      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
+      policy.data('foo', 'bar')
+      policy.cond('eq', '$key', 'test')
+
+      const str = await policy.toJWT()
+
+      const decoded = jwt.decode(str, 'secret')
+      expect(decoded.data).to.deep.equal([
+        {
+          'foo': 'bar'
+        },
+        [
+          'eq',
+          '$key',
+          'test'
+        ]
+      ])
     })
   })
 })
