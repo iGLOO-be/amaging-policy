@@ -1,8 +1,8 @@
 
 import jwt from 'jsonwebtoken'
-import Policy from './lib/Policy'
 import debugFactory from 'debug'
-import { promisify } from 'util'
+import { promisify } from 'es6-promisify'
+import Policy from './lib/Policy'
 
 const debug = debugFactory('amaging-policy:parse')
 const jwtVerify = promisify(jwt.verify.bind(jwt))

@@ -1,7 +1,7 @@
 
 import assert from 'assert'
 import jwt from 'jsonwebtoken'
-import { promisify } from 'util'
+import { promisify } from 'es6-promisify'
 
 const jwtSign = promisify(jwt.sign.bind(jwt))
 
