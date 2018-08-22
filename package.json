@@ -1,13 +1,16 @@
 {
   "name": "@igloo-be/amaging-policy",
   "version": "1.0.2",
-  "main": "lib/policy-factory.js",
-  "engines" : {
-    "node" : ">=8"
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "engines": {
+    "node": ">=8"
   },
   "scripts": {
-    "test": "npm run lint && nyc mocha",
-    "lint": "standard --env mocha"
+    "test": "npm run lint && jest",
+    "lint": "eslint src",
+    "build": "babel -d lib src",
+    "prepublish": "npm run build"
   },
   "homepage": "https://github.com/iGLOO-be/amaging-policy",
   "repository": {
@@ -17,16 +20,31 @@
   "author": "iGLOO <team@igloo.be>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^3.5.3",
-    "nyc": "~11.2.1",
-    "standard": "~10.0.3"
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "^23.4.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.4.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "jest": "^23.5.0"
   },
   "dependencies": {
-    "debug": "^3.0.1",
+    "debug": "^3.1.0",
+    "depd": "^1.1.2",
     "dottystore": "0.0.2",
     "jsonwebtoken": "^8.3.0",
-    "lodash": "^4.17.4",
-    "moment": "^2.18.1"
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
   }
 }

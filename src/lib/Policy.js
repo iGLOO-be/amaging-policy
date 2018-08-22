@@ -1,7 +1,10 @@
 
-const _ = require('lodash')
-const Store = require('dottystore')
-const validators = require('./validators')
+import isObject from 'lodash/isObject'
+import filter from 'lodash/filter'
+import extend from 'lodash/extend'
+import toArray from 'lodash/toArray'
+import Store from 'dottystore'
+import validators from './validators'
 
 /*
   Policy sample:
@@ -40,7 +43,7 @@ class Condition {
     this.validator = validator
     this.validatorArgs = validatorArgs
   }
-  valid (value) { return this.validator.apply(null, [value].concat(_.toArray(this.validatorArgs))) }
+  valid (value) { return this.validator.apply(null, [value].concat(toArray(this.validatorArgs))) }
 }
 
 class Policy extends Store {
@@ -81,13 +84,13 @@ class Policy extends Store {
     return super.set(...arguments)
   }
 
-  _parsePolicy (policy) {
+  _parsePolicy (policy = {}) {
     let key
     const data = {}
     const conditions = []
 
     for (let pol of Array.from(policy.conditions || [])) {
-      if (_.isArray(pol)) {
+      if (Array.isArray(pol)) {
         const validatorName = pol[0]
         key = pol[1].replace(/^$/, '')
         const validatorArgs = pol.slice(2)
@@ -99,8 +102,8 @@ class Policy extends Store {
 
         const condition = new Condition(key, validator, validatorArgs)
         conditions.push(condition)
-      } else if (_.isObject(pol)) {
-        _.extend(data, pol)
+      } else if (isObject(pol)) {
+        extend(data, pol)
       }
     }
 
@@ -116,11 +119,11 @@ class Policy extends Store {
   }
 
   _findCondition (key) {
-    return _.filter(this.conditions, {key})
+    return filter(this.conditions, {key})
   }
 }
 Policy.initClass()
 
 Policy.registerValidators(validators)
 
-module.exports = Policy
+export default Policy
