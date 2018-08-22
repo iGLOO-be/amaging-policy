@@ -22,12 +22,20 @@ export default class PolicyRepresentation {
   }
 
   cond (action, key, value) {
-    this._conditions.push([ action, key, value ])
+    if (Array.isArray(action)) {
+      action.forEach(v => this.cond(...v))
+    } else {
+      this._conditions.push([ action, key, value ])
+    }
     return this
   }
 
   data (key, value) {
-    this._data[key] = value
+    if (typeof key === 'object') {
+      Object.assign(this._data, key)
+    } else {
+      this._data[key] = value
+    }
     return this
   }
 
