@@ -2,6 +2,9 @@
   "name": "@igloo-be/amaging-policy",
   "version": "1.0.2",
   "main": "lib/policy-factory.js",
+  "engines" : {
+    "node" : ">=8"
+  },
   "scripts": {
     "test": "npm run lint && nyc mocha",
     "lint": "standard --env mocha"
