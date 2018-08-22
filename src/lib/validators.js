@@ -1,5 +1,5 @@
 
-module.exports = {
+export default {
   'eq': function (value, expected) {
     return value === expected
   },

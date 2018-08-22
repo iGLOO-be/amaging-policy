@@ -1,3 +1,1 @@
-/test
-/coverage
-/.nyc_output
+__tests__
