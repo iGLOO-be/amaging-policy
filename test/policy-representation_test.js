@@ -88,13 +88,14 @@ describe('PolicyRepresentation', function () {
     })
 
     it('toJWT', async function () {
-      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret')
+      const policy = new Policy(new Date('2014-12-11T16:30:37.725Z'), '1d', 'secret', 'access')
       policy.data('foo', 'bar')
       policy.cond('eq', '$key', 'test')
 
       const str = await policy.toJWT()
 
       const decoded = jwt.decode(str, 'secret')
+      expect(decoded.accessKey).to.equal('access')
       expect(decoded.data).to.deep.equal([
         {
           'foo': 'bar'

@@ -9,6 +9,7 @@ const chai = require('chai')
 const moment = require('moment')
 const { expect } = chai
 const jwt = require('jsonwebtoken')
+const PolicyFactory = require('../lib/policy-factory')
 
 const genToken = function (policy, secret) {
   const sign = crypto.createHmac('sha1', secret)
@@ -18,28 +19,37 @@ const genToken = function (policy, secret) {
 
 const encodeBase64 = policy => Buffer.from(policy, 'utf-8').toString('base64')
 
-const requirePolicyFactory = () => require('../lib/policy-factory')
-const getPolicyFactory = (policy, token, secret) => new (requirePolicyFactory())(policy, token, secret)
-
 describe('PolicyFactory', function () {
-  it('is a class', () => expect(requirePolicyFactory()).to.be.a('function'))
+  it('is a class', () => expect(PolicyFactory).to.be.a('function'))
 
   it('Cannot be instanciated without a secret', () =>
-    expect(() => getPolicyFactory()).throws('The secret is mandatory.')
+    expect(() => new PolicyFactory()).throws('The secret is mandatory.')
   )
 
-  it('Can be instanciated with all arguments', () => getPolicyFactory('secret'))
+  it('Can be instanciated with all arguments', () => new PolicyFactory('secret'))
+
+  describe('PolicyFactory:static:getAccessKeyFromJWT', function () {
+    it('Return false if policy is not correct', () => {
+      expect(PolicyFactory.getAccessKeyFromJWT('boom')).to.equal(undefined)
+    })
+    it('Return false if jwt is ok but policy is not correct', () => {
+      expect(PolicyFactory.getAccessKeyFromJWT(jwt.sign({ baazz: 'access' }, 'secret'))).to.equal(undefined)
+    })
+    it('Return accessKey', () => {
+      expect(PolicyFactory.getAccessKeyFromJWT(jwt.sign({ accessKey: 'access' }, 'secret'))).to.equal('access')
+    })
+  })
 
   describe('PolicyFactory::createFromJWT', function () {
     it('Return false if policy is not correct', async function () {
       const policyToken = jwt.sign({}, 'foobar')
-      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      const policy = await new PolicyFactory('secret').createFromJWT(policyToken)
       return expect(policy).to.be.equals(false)
     })
 
     it('Return false if policy expired', async function () {
       const policyToken = jwt.sign({}, 'foobar', { expiresIn: -1 })
-      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      const policy = await new PolicyFactory('secret').createFromJWT(policyToken)
       return expect(policy).to.be.equals(false)
     })
 
@@ -51,7 +61,7 @@ describe('PolicyFactory', function () {
           ]
         }
       }, 'secret')
-      const policy = await getPolicyFactory('secret').createFromJWT(policyToken)
+      const policy = await new PolicyFactory('secret').createFromJWT(policyToken)
       expect(policy).to.be.instanceOf(require('../lib/policy'))
       expect(policy.get('foo')).to.be.equal('barrr')
     })
@@ -64,7 +74,7 @@ describe('PolicyFactory', function () {
       const hmacSecret = 'bad_secret'
       const token = genToken(base64Policy, hmacSecret)
       const policy =
-        getPolicyFactory('secret').create(
+        new PolicyFactory('secret').create(
           base64Policy,
           token
         )
@@ -77,7 +87,7 @@ describe('PolicyFactory', function () {
       const hmacSecret = 'secret'
       const token = genToken(base64Policy, hmacSecret)
       const policy =
-        getPolicyFactory('secret').create(
+        new PolicyFactory('secret').create(
           base64Policy,
           token
         )
@@ -90,7 +100,7 @@ describe('PolicyFactory', function () {
       const hmacSecret = 'secret'
       const token = genToken(base64Policy, hmacSecret)
       const policy =
-        getPolicyFactory('secret').create(
+        new PolicyFactory('secret').create(
           base64Policy,
           token
         )
@@ -103,7 +113,7 @@ describe('PolicyFactory', function () {
       const hmacSecret = 'secret'
       const token = genToken(base64Policy, hmacSecret)
       const policy =
-        getPolicyFactory('secret').create(
+        new PolicyFactory('secret').create(
           base64Policy,
           token
         )
@@ -113,12 +123,14 @@ describe('PolicyFactory', function () {
 
   describe('PolicyFactory::represent', () =>
     it('Return a PolicyRepresentation', function () {
-      const policy =
-        getPolicyFactory('secret').represent(
+      const policyRepresentation =
+        new PolicyFactory('secret', 'access').represent(
           new Date(),
           '1d'
         )
-      return expect(policy).to.be.instanceOf(require('../lib/policy-representation'))
+      expect(policyRepresentation).to.be.instanceOf(require('../lib/policy-representation'))
+      expect(policyRepresentation._secret).to.equal('secret')
+      expect(policyRepresentation._accessKey).to.equal('access')
     })
   )
 })
