@@ -19,6 +19,7 @@ export default class PolicyRepresentation {
 
   expiresIn (_expiresIn) {
     this._expiresIn = _expiresIn
+    return this
   }
 
   cond (action, key, value) {
