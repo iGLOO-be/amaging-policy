@@ -25,7 +25,9 @@ export default async function parse (secret, token) {
 
   debug('JWT valid with:', decoded)
 
-  return new Policy(decoded.data)
+  return new Policy({
+    conditions: decoded.data
+  })
 }
 
 export function getAccessKey (token) {

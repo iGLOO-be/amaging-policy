@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parse Should correctly parse a policy 1`] = `
+Array [
+  Condition {
+    "key": "key",
+    "validator": [Function],
+    "validatorArgs": Array [
+      "test",
+    ],
+  },
+]
+`;
