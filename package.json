@@ -1,6 +1,6 @@
 {
   "name": "@igloo-be/amaging-policy",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "lib/index.js",
   "module": "src/index.js",
   "engines": {
