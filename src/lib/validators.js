@@ -22,5 +22,10 @@ export default {
 
   'in': function (value, possibleValues) {
     return (possibleValues && possibleValues.indexOf && possibleValues.indexOf(value) >= 0) || false
+  },
+
+  'range': function (value, [ start, end ]) {
+    const v = parseFloat(value)
+    return v >= start && v <= end
   }
 }

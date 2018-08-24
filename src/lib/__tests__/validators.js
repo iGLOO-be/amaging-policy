@@ -56,4 +56,14 @@ describe('Validators', () => {
       expect(validators.in(null, null)).toEqual(false)
     })
   )
+
+  describe('range', () =>
+    it('Must be found in array', () => {
+      expect(validators.range(0, [0, 2])).toEqual(true)
+      expect(validators.range(1, [0, 2])).toEqual(true)
+      expect(validators.range(2, [0, 2])).toEqual(true)
+      expect(validators.range(3, [0, 2])).toEqual(false)
+      expect(validators.range(1.25, [0, 2])).toEqual(true)
+    })
+  )
 })
