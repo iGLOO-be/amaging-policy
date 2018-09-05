@@ -38,8 +38,9 @@ class PolicyError extends Error {
 }
 
 class Condition {
-  constructor (key, validator, validatorArgs) {
+  constructor (key, validatorName, validator, validatorArgs) {
     this.key = key
+    this.validatorName = validatorName
     this.validator = validator
     this.validatorArgs = validatorArgs
   }
@@ -100,7 +101,7 @@ class Policy extends Store {
           throw new PolicyError('INVALID_VALIDATOR_NAME', {validator})
         }
 
-        const condition = new Condition(key, validator, validatorArgs)
+        const condition = new Condition(key, validatorName, validator, validatorArgs)
         conditions.push(condition)
       } else if (isObject(pol)) {
         extend(data, pol)

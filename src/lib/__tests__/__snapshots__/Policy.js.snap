@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Policy Policy::getConditionForKey Can get conditions for a key 1`] = `
+Array [
+  Condition {
+    "key": "foo",
+    "validator": [Function],
+    "validatorArgs": Array [
+      "bar",
+    ],
+    "validatorName": "eq",
+  },
+  Condition {
+    "key": "foo",
+    "validator": [Function],
+    "validatorArgs": Array [
+      "baz",
+    ],
+    "validatorName": "eq",
+  },
+]
+`;

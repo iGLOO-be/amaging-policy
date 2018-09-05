@@ -83,4 +83,17 @@ describe('Policy', () => {
       expect(policy.get('foo')).toEqual(undefined)
     })
   })
+
+  describe('Policy::getConditionForKey', function () {
+    it('Can get conditions for a key', function () {
+      const policy = new Policy({
+        conditions: [
+          ['eq', 'foo', 'bar'],
+          ['eq', 'foo', 'baz'],
+          ['eq', 'bar', 'baz']
+        ]
+      })
+      expect(policy.getConditionForKey('foo')).toMatchSnapshot()
+    })
+  })
 })
