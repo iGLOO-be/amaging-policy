@@ -44,6 +44,7 @@
     "moment": "^2.22.2"
   },
   "jest": {
+    "rootDir": "src",
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
