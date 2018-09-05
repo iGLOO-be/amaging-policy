@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Policy Policy::getConditionForKey Can get conditions for a key 1`] = `
+exports[`Policy Policy::getConditionsForKey Can get conditions for a key 1`] = `
 Array [
   Condition {
     "key": "foo",
