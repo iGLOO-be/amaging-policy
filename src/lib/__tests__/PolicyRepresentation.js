@@ -24,6 +24,13 @@ describe('PolicyRepresentation', () => {
         ['eq', '$key', 'test']
       ])
     })
+    it('Add a condition with multiple arguments', () => {
+      const policy = new PolicyRepresentation('accessKey', 'secret')
+      policy.cond('range', 'Content-Length', 0, 100)
+      expect(policy._conditions).toEqual([
+        ['range', 'Content-Length', 0, 100]
+      ])
+    })
     it('Add multiple conditions', () => {
       const policy = new PolicyRepresentation('accessKey', 'secret')
       policy.cond([

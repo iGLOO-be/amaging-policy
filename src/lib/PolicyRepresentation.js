@@ -22,11 +22,11 @@ export default class PolicyRepresentation {
     return this
   }
 
-  cond (action, key, value) {
+  cond (action, key, ...value) {
     if (Array.isArray(action)) {
       action.forEach(v => this.cond(...v))
     } else {
-      this._conditions.push([ action, key, value ])
+      this._conditions.push([ action, key, ...value ])
     }
     return this
   }
