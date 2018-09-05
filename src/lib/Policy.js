@@ -73,7 +73,7 @@ class Policy extends Store {
   }
 
   set (key, value) {
-    const conditions = this._findCondition(key)
+    const conditions = this.getConditionForKey(key)
 
     for (let cond of Array.from(conditions || [])) {
       if (!cond.valid(value)) {
@@ -118,7 +118,7 @@ class Policy extends Store {
     })()
   }
 
-  _findCondition (key) {
+  getConditionForKey (key) {
     return filter(this.conditions, {key})
   }
 }
