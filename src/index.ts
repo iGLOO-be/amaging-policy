@@ -1,16 +1,16 @@
 
-import PolicyRepresentation from './lib/PolicyRepresentation'
-import parse, { getAccessKey } from './parse'
-import legacyParse from './legacyParse'
-import Policy from './lib/Policy'
+import legacyParse from "./legacyParse";
+import Policy from "./lib/Policy";
+import PolicyRepresentation from "./lib/PolicyRepresentation";
+import parse, { getAccessKey } from "./parse";
 
 export {
   parse,
   getAccessKey,
   legacyParse,
-  Policy
-}
+  Policy,
+};
 
-export function sign (accessKey, secret) {
-  return new PolicyRepresentation(accessKey, secret)
+export function sign(accessKey, secret) {
+  return new PolicyRepresentation(accessKey, secret);
 }

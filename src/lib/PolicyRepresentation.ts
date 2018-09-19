@@ -1,58 +1,58 @@
 
-import assert from 'assert'
-import jwt from 'jsonwebtoken'
-import { promisify } from 'es6-promisify'
+import assert from "assert";
+import { promisify } from "es6-promisify";
+import jwt from "jsonwebtoken";
 
-const jwtSign = promisify(jwt.sign.bind(jwt))
+const jwtSign = promisify(jwt.sign.bind(jwt));
 
 export default class PolicyRepresentation {
-  constructor (accessKey, secret) {
-    assert(accessKey, 'Options `accessKey` is mandatory.')
-    assert(secret, 'Options `secret` is mandatory.')
+  constructor(accessKey, secret) {
+    assert(accessKey, "Options `accessKey` is mandatory.");
+    assert(secret, "Options `secret` is mandatory.");
 
-    this._expiresIn = '20m'
-    this._conditions = []
-    this._data = {}
-    this._accessKey = accessKey
-    this._secret = secret
+    this._expiresIn = "20m";
+    this._conditions = [];
+    this._data = {};
+    this._accessKey = accessKey;
+    this._secret = secret;
   }
 
-  expiresIn (_expiresIn) {
-    this._expiresIn = _expiresIn
-    return this
+  public expiresIn(_expiresIn) {
+    this._expiresIn = _expiresIn;
+    return this;
   }
 
-  cond (action, key, ...value) {
+  public cond(action, key, ...value) {
     if (Array.isArray(action)) {
-      action.forEach(v => this.cond(...v))
+      action.forEach((v) => this.cond(...v));
     } else {
-      this._conditions.push([ action, key, ...value ])
+      this._conditions.push([ action, key, ...value ]);
     }
-    return this
+    return this;
   }
 
-  data (key, value) {
-    if (typeof key === 'object') {
-      Object.assign(this._data, key)
+  public data(key, value) {
+    if (typeof key === "object") {
+      Object.assign(this._data, key);
     } else {
-      this._data[key] = value
+      this._data[key] = value;
     }
-    return this
+    return this;
   }
 
-  async toJWT () {
+  public async toJWT() {
     const payload = {
       accessKey: this._accessKey,
       data: [
-        ...Object.keys(this._data).map(key => ({ [key]: this._data[key] })),
-        ...this._conditions
-      ]
-    }
+        ...Object.keys(this._data).map((key) => ({ [key]: this._data[key] })),
+        ...this._conditions,
+      ],
+    };
 
     const jwt = await jwtSign(payload, this._secret, {
-      expiresIn: this._expiresIn
-    })
+      expiresIn: this._expiresIn,
+    });
 
-    return jwt
+    return jwt;
   }
 }

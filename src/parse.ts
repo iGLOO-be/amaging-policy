@@ -1,46 +1,46 @@
 
-import jwt from 'jsonwebtoken'
-import debugFactory from 'debug'
-import { promisify } from 'es6-promisify'
-import Policy from './lib/Policy'
+import debugFactory from "debug";
+import { promisify } from "es6-promisify";
+import jwt from "jsonwebtoken";
+import Policy from "./lib/Policy";
 
-const debug = debugFactory('amaging-policy:parse')
-const jwtVerify = promisify(jwt.verify.bind(jwt))
+const debug = debugFactory("amaging-policy:parse");
+const jwtVerify = promisify(jwt.verify.bind(jwt));
 
-export default async function parse (secret, token) {
-  debug('Verify policy from JWT', token)
-  let decoded
+export default async function parse(secret, token) {
+  debug("Verify policy from JWT", token);
+  let decoded;
 
   try {
-    decoded = await jwtVerify(token, secret)
+    decoded = await jwtVerify(token, secret);
   } catch (err) {
-    debug('Got error during verify policy from JWT', err)
+    debug("Got error during verify policy from JWT", err);
 
-    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
-      return false
+    if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
+      return false;
     }
 
-    throw err
+    throw err;
   }
 
-  debug('JWT valid with:', decoded)
+  debug("JWT valid with:", decoded);
 
   return new Policy({
-    conditions: decoded.data
-  })
+    conditions: decoded.data,
+  });
 }
 
-export function getAccessKey (token) {
-  let decoded
+export function getAccessKey(token) {
+  let decoded;
 
   try {
-    decoded = jwt.decode(token)
+    decoded = jwt.decode(token);
   } catch (err) {
-    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
-      return
+    if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
+      return;
     }
-    throw err
+    throw err;
   }
 
-  return (decoded && decoded.accessKey) || undefined
+  return (decoded && decoded.accessKey) || undefined;
 }
