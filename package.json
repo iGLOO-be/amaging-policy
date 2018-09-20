@@ -2,8 +2,10 @@
   "name": "@igloo-be/amaging-policy",
   "version": "2.0.8",
   "main": "lib/index.js",
-  "module": "src/index.js",
   "types": "./lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
   "engines": {
     "node": ">=8"
   },
