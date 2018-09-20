@@ -3,18 +3,18 @@ import assert from "assert";
 import crypto from "crypto";
 import debugFactory from "debug";
 import moment from "moment";
-import Policy from "./lib/Policy";
+import { IPolicyObject, Policy } from "./lib/Policy";
 
 const debug = debugFactory("amaging-policy:legacyParse");
 
 const utils = {
-  genToken(str, secret) {
+  genToken(str: string, secret: string) {
     const sign = crypto.createHmac("sha1", secret);
     sign.update(str);
     return sign.digest("hex").toLowerCase();
   },
 
-  parseJSON(str) {
+  parseJSON(str: string) {
     try {
       return JSON.parse(str);
     } catch (e) {
@@ -22,12 +22,16 @@ const utils = {
     }
   },
 
-  decodeBase64(str) {
+  decodeBase64(str: string) {
     return Buffer.from(str, "base64").toString();
   },
 };
 
-export default function legacyParse(secret, policy, token) {
+interface ILegacyPolicyObject extends IPolicyObject {
+  expiration?: number;
+}
+
+export default function legacyParse(secret: string, policy: string, token: string) {
   assert(policy, "The policy is mandatory.");
   assert(token, "The token is mandatory.");
 
@@ -43,16 +47,17 @@ export default function legacyParse(secret, policy, token) {
   }
 
   policy = utils.decodeBase64(policy);
+  const decodedPolicy = utils.parseJSON(policy) as ILegacyPolicyObject;
 
-  if (!(policy = utils.parseJSON(policy))) {
+  if (!decodedPolicy) {
     debug("Abort policy creation due to invalid policy");
     return false;
   }
 
-  if (!policy.expiration || (moment().diff(policy.expiration) > 0)) {
+  if (!decodedPolicy.expiration || (moment().diff(decodedPolicy.expiration) > 0)) {
     debug("Abort policy creation due to expired policy");
     return false;
   }
 
-  return new Policy(policy);
+  return new Policy(decodedPolicy);
 }

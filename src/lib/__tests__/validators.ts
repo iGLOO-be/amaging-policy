@@ -1,5 +1,5 @@
 
-import validators from "../validators";
+import { validators } from "../validators";
 
 describe("Validators", () => {
   describe("eq", () =>

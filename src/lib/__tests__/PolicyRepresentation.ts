@@ -1,6 +1,6 @@
 
 import jwt from "jsonwebtoken";
-import PolicyRepresentation from "../PolicyRepresentation";
+import { PolicyRepresentation } from "../PolicyRepresentation";
 
 describe("PolicyRepresentation", () => {
   it("Cannot be instanciated without a date", () => {
@@ -12,7 +12,7 @@ describe("PolicyRepresentation", () => {
   });
 
   it("Can be instanciated with all arguments", () => {
-    const policyRepresentation = new PolicyRepresentation(new Date(), "1d", "secret");
+    const policyRepresentation = new PolicyRepresentation("key", "secret");
     expect(policyRepresentation).toBeTruthy();
   });
 
@@ -20,14 +20,14 @@ describe("PolicyRepresentation", () => {
     it("Add a condition", () => {
       const policy = new PolicyRepresentation("accessKey", "secret");
       policy.cond("eq", "$key", "test");
-      expect(policy._conditions).toEqual([
+      expect(policy.conditions).toEqual([
         ["eq", "$key", "test"],
       ]);
     });
     it("Add a condition with multiple arguments", () => {
       const policy = new PolicyRepresentation("accessKey", "secret");
       policy.cond("range", "Content-Length", 0, 100);
-      expect(policy._conditions).toEqual([
+      expect(policy.conditions).toEqual([
         ["range", "Content-Length", 0, 100],
       ]);
     });
@@ -37,7 +37,7 @@ describe("PolicyRepresentation", () => {
         ["eq", "$key", "test"],
         ["eq", "action", "bar"],
       ]);
-      expect(policy._conditions).toEqual([
+      expect(policy.conditions).toEqual([
         ["eq", "$key", "test"],
         ["eq", "action", "bar"],
       ]);
@@ -46,21 +46,21 @@ describe("PolicyRepresentation", () => {
 
   describe("PolicyRepresentation.prototype.data", () => {
     it("Add a data", () => {
-      const policy = new PolicyRepresentation(new Date(), "1d", "secret");
+      const policy = new PolicyRepresentation("access", "secret");
       policy.data("foo", "bar");
       expect(policy._data).toEqual({
         foo: "bar",
       });
     });
     it("Add multiple data", () => {
-      const policy = new PolicyRepresentation(new Date(), "1d", "secret");
+      const policy = new PolicyRepresentation("access", "secret");
       policy.data({
-        foo: "bar",
         baz: "buz",
+        foo: "bar",
       });
       expect(policy._data).toEqual({
-        foo: "bar",
         baz: "buz",
+        foo: "bar",
       });
     });
   });
@@ -73,7 +73,7 @@ describe("PolicyRepresentation", () => {
 
       const str = await policy.toJWT();
 
-      const decoded = jwt.decode(str, "secret");
+      const decoded = jwt.decode(str) as { accessKey: string, data: any };
       expect(decoded.accessKey).toEqual("access");
       expect(decoded.data).toEqual([
         {

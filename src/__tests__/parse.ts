@@ -2,7 +2,7 @@
 import parse, { getAccessKey } from "../parse";
 import sign from "../sign";
 
-import Policy from "../lib/Policy";
+import { Policy } from "../lib/Policy";
 
 describe("parse", () => {
   it("Should correctly parse a policy", async () => {
@@ -11,6 +11,10 @@ describe("parse", () => {
       .toJWT();
 
     const policy = await parse("secret", jwt);
+    if (!policy) {
+      throw new Error("Unable to parse policy");
+    }
+
     expect(policy).toBeInstanceOf(Policy);
 
     expect(policy.conditions).toMatchSnapshot();

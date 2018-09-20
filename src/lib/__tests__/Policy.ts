@@ -1,5 +1,5 @@
 
-import Policy from "../Policy";
+import { Policy } from "../Policy";
 
 describe("Policy", () => {
   it("Can be instanciated with all arguments", () => {
@@ -7,19 +7,18 @@ describe("Policy", () => {
     expect(policy).toBeTruthy();
   });
 
-  it("Throws an error if policy data do not match policy conditions", function() {
-    expect(function() {
+  it("Throws an error if policy data do not match policy conditions", () => {
+    expect(() => {
       const policy = new Policy({
         conditions: [
           {foo: "bar"},
           ["eq", "foo", "baz"],
         ],
       });
-      console.log(policy);
     }).toThrow("Invalid value for key: foo");
   });
 
-  it("Not throws an error if policy data do not match policy conditions", function() {
+  it("Not throws an error if policy data do not match policy conditions", () => {
     const policy = new Policy({
       conditions: [
         {foo: "bar"},
@@ -29,8 +28,8 @@ describe("Policy", () => {
     expect(policy.get("foo")).toEqual("bar");
   });
 
-  it("Throws an error if policy data do not match the second policy conditions", function() {
-    expect(function() {
+  it("Throws an error if policy data do not match the second policy conditions", () => {
+    expect(() => {
       const policy = new Policy({
         conditions: [
           {foo: "bar"},
@@ -38,18 +37,17 @@ describe("Policy", () => {
           ["eq", "foo", "baz"],
         ],
       });
-      console.log(policy);
     }).toThrow("Invalid value for key: foo");
   });
 
-  describe("Policy::set", function() {
-    it("Can set a value without validations", function() {
+  describe("Policy::set", () => {
+    it("Can set a value without validations", () => {
       const policy = new Policy();
       policy.set("foo", "bar");
       expect(policy.get("foo")).toEqual("bar");
     });
 
-    it("Can set a value with validations", function() {
+    it("Can set a value with validations", () => {
       const policy = new Policy({
         conditions: [
           ["eq", "foo", "bar"],
@@ -60,7 +58,7 @@ describe("Policy", () => {
       expect(policy.get("foo")).toEqual("bar");
     });
 
-    it("Throws an error if set a value breaking a validation", function() {
+    it("Throws an error if set a value breaking a validation", () => {
       const policy = new Policy({
         conditions: [
           ["eq", "foo", "bar"],
@@ -71,7 +69,7 @@ describe("Policy", () => {
       expect(policy.get("foo")).toEqual(undefined);
     });
 
-    it("Throws an error if set a value breaking the second validation", function() {
+    it("Throws an error if set a value breaking the second validation", () => {
       const policy = new Policy({
         conditions: [
           ["eq", "foo", "bar"],
@@ -84,8 +82,8 @@ describe("Policy", () => {
     });
   });
 
-  describe("Policy::getConditionsForKey", function() {
-    it("Can get conditions for a key", function() {
+  describe("Policy::getConditionsForKey", () => {
+    it("Can get conditions for a key", () => {
       const policy = new Policy({
         conditions: [
           ["eq", "foo", "bar"],

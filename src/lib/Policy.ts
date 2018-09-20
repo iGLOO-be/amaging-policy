@@ -1,13 +1,13 @@
 
-import Store from "dottystore";
+import { Store } from "dottystore";
 import extend from "lodash/extend";
-import filter from "lodash/filter";
 import isObject from "lodash/isObject";
-import toArray from "lodash/toArray";
-import validators from "./validators";
+import { Condition } from "./Condition";
+import { PolicyError } from "./PolicyError";
+import { ValidatorName, validators } from "./Validators";
 
 /*
-  Policy sample:
+  Policy sample:s
 
   { "expiration": "2007-12-01T12:00:00.000Z",
     "conditions": [
@@ -19,61 +19,26 @@ import validators from "./validators";
 
 */
 
-class PolicyError extends Error {
-  constructor(type, data) {
-    super(...arguments);
-
-    this.type = type;
-    this.data = data;
-    this.name = "PolicyError";
-    this.message = (() => {
-      switch (this.type) {
-        case "INVALID_KEY":
-          return `Invalid value for key: ${this.data.key}`;
-        case "INVALID_VALIDATOR_NAME":
-          return `Invalid policy validator name: ${this.data.validator}`;
-      }
-    })();
-  }
+export interface IPolicyObject {
+  conditions?: IPolicyCondition[];
+}
+export type IPolicyCondition = [ValidatorName, string, ...any[]] | IPolicyData;
+interface IPolicyData {
+  [key: string]: string;
 }
 
-class Condition {
-  constructor(key, validatorName, validator, validatorArgs) {
-    this.key = key;
-    this.validatorName = validatorName;
-    this.validator = validator;
-    this.validatorArgs = validatorArgs;
-  }
-  public valid(value) { return this.validator.apply(null, [value].concat(toArray(this.validatorArgs))); }
-}
-
+export
 class Policy extends Store {
-  public static initClass() {
-    this.validators = {};
-  }
-  public static registerValidators(validators) {
-    return (() => {
-      const result = [];
-      for (const validatorName in validators) {
-        result.push(Policy.registerValidator(validatorName, validators[validatorName]));
-      }
-      return result;
-    })();
-  }
-  public static registerValidator(validatorName, validator) {
-    Policy.validators[validatorName] = validator;
-  }
-  public static getValidator(validatorName) {
-    return Policy.validators[validatorName];
-  }
+  public conditions: Condition[];
 
-  constructor(policy) {
-    super(...arguments);
+  constructor(policy?: IPolicyObject) {
+    super();
 
+    this.conditions = [];
     this._parsePolicy(policy);
   }
 
-  public set(key, value) {
+  public set(key: string, value: any) {
     const conditions = this.getConditionsForKey(key);
 
     for (const cond of Array.from(conditions || [])) {
@@ -82,12 +47,12 @@ class Policy extends Store {
       }
     }
 
-    return super.set(...arguments);
+    return super.set(key, value);
   }
 
-  public _parsePolicy(policy = {}) {
+  public _parsePolicy(policy: IPolicyObject = {}) {
     let key;
-    const data = {};
+    const data: IPolicyData = {};
     const conditions = [];
 
     for (const pol of Array.from(policy.conditions || [])) {
@@ -96,7 +61,7 @@ class Policy extends Store {
         key = pol[1].replace(/^$/, "");
         const validatorArgs = pol.slice(2);
 
-        const validator = Policy.getValidator(validatorName);
+        const validator = validators[validatorName];
         if (!validator) {
           throw new PolicyError("INVALID_VALIDATOR_NAME", {validator});
         }
@@ -110,21 +75,12 @@ class Policy extends Store {
 
     this.conditions = conditions;
 
-    return (() => {
-      const result = [];
-      for (key in data) {
-        result.push(this.set(key, data[key]));
-      }
-      return result;
-    })();
+    Object.keys(data).forEach((dataKey) => {
+      this.set(dataKey, data[dataKey]);
+    });
   }
 
-  public getConditionsForKey(key) {
-    return filter(this.conditions, {key});
+  public getConditionsForKey(key: string): Condition[] {
+    return this.conditions.filter((cond) => cond.key === key);
   }
 }
-Policy.initClass();
-
-Policy.registerValidators(validators);
-
-export default Policy;

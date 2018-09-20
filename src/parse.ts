@@ -2,12 +2,17 @@
 import debugFactory from "debug";
 import { promisify } from "es6-promisify";
 import jwt from "jsonwebtoken";
-import Policy from "./lib/Policy";
+import { Policy } from "./lib/Policy";
 
 const debug = debugFactory("amaging-policy:parse");
-const jwtVerify = promisify(jwt.verify.bind(jwt));
+const jwtVerify: (token: string, secret: string) => Promise<IPolicyJWTCOntent> = promisify(jwt.verify.bind(jwt));
 
-export default async function parse(secret, token) {
+interface IPolicyJWTCOntent {
+  accessKey?: string;
+  data?: object;
+}
+
+export default async function parse(secret: string, token: string) {
   debug("Verify policy from JWT", token);
   let decoded;
 
@@ -26,15 +31,15 @@ export default async function parse(secret, token) {
   debug("JWT valid with:", decoded);
 
   return new Policy({
-    conditions: decoded.data,
+    conditions: Array.isArray(decoded.data) ? decoded.data : [],
   });
 }
 
-export function getAccessKey(token) {
+export function getAccessKey(token: string) {
   let decoded;
 
   try {
-    decoded = jwt.decode(token);
+    decoded = jwt.decode(token) as IPolicyJWTCOntent;
   } catch (err) {
     if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
       return;
