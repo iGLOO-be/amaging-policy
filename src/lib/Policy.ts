@@ -4,7 +4,7 @@ import extend from "lodash/extend";
 import isObject from "lodash/isObject";
 import { Condition } from "./Condition";
 import { PolicyError } from "./PolicyError";
-import { ValidatorName, validators } from "./Validators";
+import { ValidatorName, validators } from "./validators";
 
 /*
   Policy sample:s

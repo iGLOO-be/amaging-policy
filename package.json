@@ -8,7 +8,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": "npm run lint && jest",
+    "test": "npm run lint && npm run build && jest",
     "lint": "tslint -p .",
     "build": "rm -rf lib/* && tsc",
     "prepublish": "npm run build"

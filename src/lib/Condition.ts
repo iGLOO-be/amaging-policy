@@ -1,5 +1,5 @@
 
-import { ValidatorFn, ValidatorName } from "./Validators";
+import { ValidatorFn, ValidatorName } from "./validators";
 
 export
 class Condition {
